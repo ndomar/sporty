@@ -1,0 +1,18 @@
+{
+	"development": {
+		"mysql": {
+			"host": "localhost",
+			"database": "sporty",
+			"user": "root",
+			"password": "",
+		},
+		"elasticsearch": {
+			"host": {
+				"host": "localhost",
+				"port": 9200
+			}
+		}
+
+	}
+}
+	
