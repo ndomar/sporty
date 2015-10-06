@@ -9,7 +9,9 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
-
+var rest = require(__dirname + '/src/util/rest');
+var sanitizer = require('sanitizer');
+global.REST = rest;
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -22,8 +24,32 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.use(function(req, res, next) {
+  // override express req.param
+  req.param = function(k) {
+    if(req.method === 'GET') {
+      return sanitizer.escape(req.query[k])
+    } else {
+      return sanitizer.escape(req.body[k])
+    }
+  }
+  next();
+})
+// authentication middleware
+app.use(function(req, res, next) {
+  // check if the token is sent.
+  var token = req.param('accessToken');
+  if(typeof token !== 'undefined' && token) {
+    return REST.response({error: "No Token Sent"}, null, req, res);
+  } else {
+    next()
+  }
+})
+
 app.use('/', routes);
 app.use('/users', users);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
