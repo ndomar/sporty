@@ -23,7 +23,6 @@ var rest = module.exports = {
 					userMessage = err.error;
 					break;
 				case 500:
-					// httpStatusCode = 500;
 					developerMessage = "Internal server error: "+err.error+". In most times, this means that our database server had passed some bad times during your request. Please try again later.";
 					userMessage = [{
 						field: 'all',
